@@ -6,7 +6,7 @@ import spconv.pytorch as spconv
 import flash_attn
 from timm.layers import DropPath
 
-from libs.pointrope import PointROPE as PointROPE
+from libs.pointrope import PointROPE
 from models.builder import MODELS
 from models.modules import PointModule, PointSequential, Embedding, GridPooling, GridUnpooling
 from models.utils.structure import Point
@@ -224,8 +224,8 @@ class Block(PointModule):
 class LitePT(PointModule):
     def __init__(
         self,
-        in_channels=6,
-        order=("z", "z-trans"),
+        in_channels=4,
+        order=("z", "z-trans", "hilbert", "hilbert-trans"),
         stride=(2, 2, 2, 2),
         enc_depths=(2, 2, 2, 6, 2),
         enc_channels=(36, 72, 144, 252, 504),

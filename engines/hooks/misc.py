@@ -22,7 +22,6 @@ from utils.comm import is_main_process, synchronize
 from utils.cache import shared_dict
 from utils.scheduler import CosineScheduler
 import utils.comm as comm
-from engines.test import TESTERS
 
 from .default import HookBase
 from .builder import HOOKS
@@ -33,6 +32,10 @@ AMP_DTYPE = dict(
     bfloat16=torch.bfloat16,
 )
 
+def get_testers():
+    # lazy import to prevent circular import
+    from engines.test import TESTERS
+    return TESTERS
 @HOOKS.register_module()
 class IterationTimer(HookBase):
     def __init__(self, warmup_iter=1):
@@ -306,6 +309,7 @@ class PreciseEvaluator(HookBase):
         )
         torch.cuda.empty_cache()
         cfg = self.trainer.cfg
+        TESTERS = get_testers()
         tester = TESTERS.build(
             dict(type=cfg.test.type, cfg=cfg, model=self.trainer.model)
         )

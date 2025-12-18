@@ -67,6 +67,17 @@ University of Zurich
     cd ../..
     ```
 
+### Use LitePT in Your Own Project
+To simplify integrating LitePT into your own projects, we provide a standalone implementation of LitePT. To include LitePT in your codebase, copy the directories ```LitePT/litept``` and ```LitePT/libs/pointrope``` into your project, arranging them as shown below:
+
+```
+Your_project/
+└── .../
+    └── LitePT/
+        ├── litept/
+        └── libs/pointrope
+```
+We also provide a ```demo_use.py``` script that illustrates how to use the standalone LitePT with an example point cloud input.
 
 ### Data
 We prepare and organize the data in the same way with Pointcept [Data Preparation](https://github.com/Pointcept/Pointcept#data-preparation). All data should be placed in ```LitePT/data```.
