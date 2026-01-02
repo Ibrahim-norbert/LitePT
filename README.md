@@ -133,6 +133,20 @@ sh scripts/train.sh -g 4 -d scannet -c insseg-litept-small-v1m2 -n insseg-litept
 sh scripts/train.sh -g 4 -d scannet200 -c insseg-litept-small-v1m2 -n insseg-litept-small-v1m2
 ```
 
+## Testing
+
+###  Semantic segmentation
+The training pipeline automatically runs testing once training is complete through the ```PreciseEvaluator``` hook. Alternatively, standalone testing with pretrained weights can be run as follows:
+
+```shell
+export PYTHONPATH=./
+python tools/test.py --config-file "${CONFIG_PATH}" --num-gpus "${NUM_GPU}" --options save_path="${SAVE_PATH}" weight="${CHECKPOINT_PATH}"
+
+## E.g. for NuScenes + LitePT-S
+## python tools/test.py --config-file configs/nuscenes/semseg-litept-small-v1m1.py --num-gpus 4 --options save_path=exp/nuscenes/semseg-litept-small-v1m1 weight=exp/nuscenes/semseg-litept-small-v1m1/model/model_best.pth
+```
+
+
 
 ## Checklist
 - [x] Release models, code for semantic segmentation and instance segmentation.
