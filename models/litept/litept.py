@@ -3,13 +3,24 @@ from functools import partial
 import torch
 import torch.nn as nn
 import spconv.pytorch as spconv
-import flash_attn
+#import flash_attn
 from timm.layers import DropPath
 
 from libs.pointrope import PointROPE
 from models.builder import MODELS
 from models.modules import PointModule, PointSequential, Embedding, GridPooling, GridUnpooling
 from models.utils.structure import Point
+
+import torch.nn.functional as F
+
+def attention(q, k, v, attn_mask=None, dropout_p=0.0):
+    return F.scaled_dot_product_attention(
+        q, k, v,
+        attn_mask=attn_mask,
+        dropout_p=dropout_p,
+        is_causal=False
+    )
+
 class PointROPEAttention(PointModule):
     def __init__(
         self,
@@ -68,19 +79,25 @@ class PointROPEAttention(PointModule):
         k = self.rope(k.float(), pos).to(k.dtype) # [1, H, N, head_dim]
 
         # assemble input for flash attention
-        qkv_rotated = torch.stack([
-            q.squeeze(0).transpose(0,1),
-            k.squeeze(0).transpose(0,1),
-            v.reshape(-1, H, C // H)
-        ], dim=1) # [N, 3, H, head_dim] 
+        # qkv_rotated = torch.stack([
+        #     q.squeeze(0).transpose(0,1),
+        #     k.squeeze(0).transpose(0,1),
+        #     v.reshape(-1, H, C // H)
+        # ], dim=1) # [N, 3, H, head_dim] 
 
-        feat = flash_attn.flash_attn_varlen_qkvpacked_func(
-            qkv_rotated,
-            cu_seqlens,
-            max_seqlen=self.patch_size,
-            dropout_p=self.attn_drop if self.training else 0,
-            softmax_scale=self.scale,
-        ).reshape(-1, C)
+        # feat = flash_attn.flash_attn_varlen_qkvpacked_func(
+        #     qkv_rotated,
+        #     cu_seqlens,
+        #     max_seqlen=self.patch_size,
+        #     dropout_p=self.attn_drop if self.training else 0,
+        #     softmax_scale=self.scale,
+        # ).reshape(-1, C)
+
+        feat = attention(q=q.squeeze(0).transpose(0,1),
+                        k=k.squeeze(0).transpose(0,1),
+                        v=v.reshape(-1, H, C // H),
+                        dropout_p=self.attn_drop if self.training else 0,
+                        )
 
         feat = feat.to(qkv.dtype)
         feat = feat[inverse]

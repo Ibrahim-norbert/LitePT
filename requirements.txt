@@ -1,6 +1,6 @@
 h5py 
 pyyaml
-sharedarray
+#sharedarray
 tensorboard
 tensorboardx
 wandb
@@ -11,9 +11,9 @@ scipy
 plyfile
 termcolor
 timm
-torch-cluster
+#torch-cluster
 torch-scatter
-torch-sparse
-torch-geometric==2.5.3
-colorhash
-torchmetrics
+# torch-sparse
+# torch-geometric==2.5.3
+# colorhash
+# torchmetrics
