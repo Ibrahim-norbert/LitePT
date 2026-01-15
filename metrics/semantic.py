@@ -3,7 +3,7 @@ import torch
 import logging
 import numpy as np
 from torchmetrics.classification import MulticlassConfusionMatrix
-from torch_scatter import scatter_add
+# from torch_scatter import scatter_add
 from torch import Tensor
 
 class BaseMetricResults(dict):
@@ -113,8 +113,8 @@ class ConfusionMatrix(MulticlassConfusionMatrix):
         if target.dim() == 2 and target.shape[1] >= self.num_classes:
             # Exclude 'void'/'ignored' labels counts from the histogram
             target = target[:, :self.num_classes]
-            confmat = scatter_add(
-                target.float(), pred, dim=0, dim_size=self.num_classes)
+            confmat = torch.scatter_add(
+                target.float(), pred, dim=0, dim_size=self.num_classes, reduce="sum")
             self.confmat += confmat.T.long()
             return
 

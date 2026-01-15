@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import spconv.pytorch as spconv
 
-import torch_scatter
+# import torch_scatter
 
 from addict import Dict
 from collections import OrderedDict
@@ -155,24 +155,24 @@ class GridPooling(PointModule):
             dim=0,
         )
         grid_coord = grid_coord & ((1 << 48) - 1)
-        # indices of point sorted by cluster, for torch_scatter.segment_csr
+        # indices of point sorted by cluster, for torch.segment_reduce
         _, indices = torch.sort(cluster)
-        # index pointer for sorted point, for torch_scatter.segment_csr
+        # index pointer for sorted point, for torch.segment_reduce
         idx_ptr = torch.cat([counts.new_zeros(1), torch.cumsum(counts, dim=0)])
         # head_indices of each cluster, for reduce attr e.g. code, batch
         head_indices = indices[idx_ptr[:-1]]
         point_dict = Dict(
-            feat=torch_scatter.segment_csr(
+            feat=torch.segment_reduce(
                 self.proj(point.feat)[indices], idx_ptr, reduce=self.reduce
             ),
-            coord=torch_scatter.segment_csr(
+            coord=torch.segment_reduce(
                 point.coord[indices], idx_ptr, reduce="mean"
             ),
             grid_coord=grid_coord,
             batch=point.batch[head_indices],
         )
         if "origin_coord" in point.keys():
-            point_dict["origin_coord"] = torch_scatter.segment_csr(
+            point_dict["origin_coord"] = torch.segment_reduce(
                 point.origin_coord[indices], idx_ptr, reduce="mean"
             )
         if "condition" in point.keys():
@@ -184,13 +184,13 @@ class GridPooling(PointModule):
         if "split" in point.keys():
             point_dict["split"] = point.split
         if "color" in point.keys():
-            point_dict["color"] = torch_scatter.segment_csr(
+            point_dict["color"] = torch.segment_reduce(
                 point.color[indices], idx_ptr, reduce="mean"
             )
         if "grid_size" in point.keys():
             point_dict["grid_size"] = point.grid_size * self.stride
         if "mask" in point.keys():
-            point_dict["mask"] = torch_scatter.segment_csr(
+            point_dict["mask"] = torch.segment_reduce(
                 point.mask[indices].float(), idx_ptr, reduce="mean"
             ) > 0.5
 
