@@ -6,10 +6,10 @@ import spconv.pytorch as spconv
 #import flash_attn
 from timm.layers import DropPath
 
-from libs.pointrope import PointROPE
-from models.builder import MODELS
-from models.modules import PointModule, PointSequential, Embedding, GridPooling, GridUnpooling
-from models.utils.structure import Point
+from DummyModels.LitePT.libs.pointrope import PointROPE
+from DummyModels.LitePT.models.builder import MODELS
+from DummyModels.LitePT.models.modules import PointModule, PointSequential, Embedding, GridPooling, GridUnpooling
+from DummyModels.LitePT.models.utils.structure import Point
 
 import torch.nn.functional as F
 

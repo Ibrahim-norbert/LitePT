@@ -1,6 +1,6 @@
-import utils.comm as comm
+import DummyModels.LitePT.utils.comm as comm
 import weakref
-from .builder import HOOKS
+from DummyModels.LitePT.engines.hooks.builder import HOOKS
 
 
 class HookBase:

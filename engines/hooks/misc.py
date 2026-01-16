@@ -17,11 +17,11 @@ if sys.version_info >= (3, 10):
     from collections.abc import Sequence
 else:
     from collections import Sequence
-from utils.timer import Timer
-from utils.comm import is_main_process, synchronize
-from utils.cache import shared_dict
-from utils.scheduler import CosineScheduler
-import utils.comm as comm
+from DummyModels.LitePT.utils.timer import Timer
+from DummyModels.LitePT.utils.comm import is_main_process, synchronize
+from DummyModels.LitePT.utils.cache import shared_dict
+from DummyModels.LitePT.utils.scheduler import CosineScheduler
+import DummyModels.LitePT.utils.comm as comm
 
 from .default import HookBase
 from .builder import HOOKS

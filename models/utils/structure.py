@@ -6,8 +6,8 @@ from addict import Dict
 from typing import List
 
 
-from models.utils.serialization import encode
-from models.utils import (
+from DummyModels.LitePT.models.utils.serialization import encode
+from DummyModels.LitePT.models.utils import (
     offset2batch,
     batch2offset,
     offset2bincount,

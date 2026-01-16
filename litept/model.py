@@ -14,9 +14,14 @@ import torch.nn as nn
 
 from addict import Dict
 from timm.layers import DropPath
+import os
 
-from libs.pointrope import PointROPE
-from .serialization import encode
+ROOT = os.path.abspath(os.path.join(__file__, "..", "..", "..", ".."))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+from DummyModels.LitePT.libs.pointrope import PointROPE
+from DummyModels.LitePT.litept.serialization import encode
 
 
 @torch.no_grad()

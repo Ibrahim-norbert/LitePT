@@ -7,8 +7,8 @@ import spconv.pytorch as spconv
 
 from addict import Dict
 from collections import OrderedDict
-from models.utils.structure import Point
-from engines.hooks import HookBase
+from DummyModels.LitePT.models.utils.structure import Point
+from DummyModels.LitePT.engines.hooks import HookBase
 
 
 class PointModule(nn.Module):

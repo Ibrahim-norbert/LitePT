@@ -1,9 +1,9 @@
 h5py 
 pyyaml
 #sharedarray
-tensorboard
-tensorboardx
-wandb
+# tensorboard
+# tensorboardx
+# wandb
 yapf
 addict
 einops
@@ -12,8 +12,8 @@ plyfile
 termcolor
 timm
 #torch-cluster
-torch-scatter
+# torch-scatter
 # torch-sparse
 # torch-geometric==2.5.3
-# colorhash
+colorhash
 # torchmetrics

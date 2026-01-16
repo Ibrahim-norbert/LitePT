@@ -8,11 +8,11 @@ try:
 except ImportError:
     ballquery_batch_p, bfs_cluster = None, None
 
-from models.utils import offset2batch, batch2offset
-from models.utils.structure import Point
+from DummyModels.LitePT.models.utils import offset2batch, batch2offset
+from DummyModels.LitePT.models.utils.structure import Point
 
-from models.builder import MODELS, build_model
-from models.losses import build_criteria
+from DummyModels.LitePT.models.builder import MODELS, build_model
+from DummyModels.LitePT.models.losses import build_criteria
 
 
 @MODELS.register_module("PG-v1m2")

@@ -3,21 +3,15 @@ import numpy as np
 import wandb
 import torch
 import torch.distributed as dist
-import pointops
+# import DummyModels.LitePT.libs.pointops
 from uuid import uuid4
 
-import utils.comm as comm
-from utils.misc import intersection_and_union_gpu
+import DummyModels.LitePT.utils.comm as comm
+from DummyModels.LitePT.utils.misc import intersection_and_union_gpu
 
-from .default import HookBase
-from .builder import HOOKS
+from DummyModels.LitePT.engines.hooks.default import HookBase
+from DummyModels.LitePT.engines.hooks.builder import HOOKS
 
-from datasets.transform import Compose
-from metrics.semantic import ConfusionMatrix
-
-from torch_scatter import scatter_mean
-from torch.nn.functional import normalize
-from tqdm import tqdm
 
 @HOOKS.register_module()
 class SemSegEvaluator(HookBase):

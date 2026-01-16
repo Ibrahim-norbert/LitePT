@@ -2,18 +2,23 @@ import torch
 import torch.nn as nn
 # import torch_scatter
 # import torch_cluster
+import os
+import sys
 
-from models.losses import build_criteria
-from models.utils.structure import Point
-from models.utils import offset2batch
-from .builder import MODELS, build_model
+ROOT = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+from DummyModels.LitePT.models.losses import build_criteria
+from DummyModels.LitePT.models.utils.structure import Point
+# from DummyModels.LitePT.models.utils import offset2batch
+from DummyModels.LitePT.models.builder import MODELS, build_model
 
-from models.modules import PointModel, PointSequential
-import spconv.pytorch as spconv
+# from models.modules import PointModel, PointSequential
+# import spconv.pytorch as spconv
 
-import torch.distributed as dist
-from tqdm import tqdm
-import pointops
+# import torch.distributed as dist
+# from tqdm import tqdm
+# from DummyModels.LitePT.libs import pointops
 
 @MODELS.register_module()
 class DefaultSegmentor(nn.Module):
@@ -41,7 +46,7 @@ class DefaultSegmentor(nn.Module):
             return dict(seg_logits=seg_logits)
 
 
-@MODELS.register_module()
+#@MODELS.register_module()
 class DefaultSegmentorV2(nn.Module):
     def __init__(
         self,
