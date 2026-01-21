@@ -43,7 +43,7 @@ def collate_fn(batch):
     else:
         return default_collate(batch)
 
-
+# TODO: Use this function to create the PointDict
 def point_collate_fn(batch, mix_prob=0):
     assert isinstance(
         batch[0], Mapping
