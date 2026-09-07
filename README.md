@@ -9,6 +9,8 @@ ETH Zurich,
 University of Oxford,
 University of Zurich
 
+**CVPR 2026**
+
 <a href="https://arxiv.org/abs/2512.13689"><img src="https://img.shields.io/badge/arXiv-LitePT-red" alt="Paper PDF"></a>
 <a href="https://litept.github.io/"><img src="https://img.shields.io/badge/Project_Page-LitePT-green" alt="Project Page"></a>
 <a href='https://huggingface.co/prs-eth/LitePT'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue' alt="HF Model"></a>
@@ -25,6 +27,7 @@ University of Zurich
 <u>Left</u>: LitePT-S has $3.6\times$ fewer parameters, $2\times$ faster runtime and $2\times$ lower memory footprint than PTv3. Moreover, it remains faster and more memory-efficient even when scaled up to LitePT-L with a parameter count twice that of PTv3. <u>Right</u>: Already the smallest variant, LitePT-S, matches or outperforms state-of-the-art point cloud backbones across a range of benchmarks.
 
 ## News
+- **2026-02-21:** LitePT is accepted to CVPR 2026.
 - **2025-12-16:** Paper, project page, code, models are released.
 
 ## Preparation
@@ -51,6 +54,57 @@ University of Zurich
   python setup.py install
   cd ../..
   ```
+  To support users who may want to use PointROPE in non-CUDA environments, we also provide a pure PyTorch implementation of PointROPE. The CUDA-compiled version is used by default. If it is unavailable, the system will automatically fall back to the PyTorch implementation. Please note that the PyTorch version is slightly slower than the CUDA-optimized implementation. Benchmark results are shown below:
+  <details style='padding: 10px; border-radius:5px 30px 30px 5px; border-style: solid; border-width: 1px;'>
+  <summary>Benchmark: PointROPE (Pure PyTorch VS. CUDA)</summary>
+
+  <table>
+   <caption style="caption-side: bottom; text-align: center">Efficiency comparison on ScanNet.</caption>
+   <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th colspan="2"><div align="center">Training</div></th>
+      <th colspan="2"><div align="center">Inference</div></th>
+    </tr>
+    <tr>
+      <th>Method</th>
+      <th>#Params</th>
+      <th>Latency</th>
+      <th>Memory</th>
+      <th>Latency</th>
+      <th>Memory</th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+      <td>PTv3</td>
+      <td>46.1M</td>
+      <td>110ms</td>
+      <td>5.8G</td>
+      <td>51ms</td>
+      <td>4.1G</td>
+    </tr>
+    <tr>
+      <td>LitePT-S (Pure Torch PointROPE)</td>
+      <td>12.7M</td>
+      <td>78ms</td>
+      <td>2.4G</td>
+      <td>24ms</td>
+      <td>2.0G</td>
+    </tr>
+    <tr>
+    <td>LitePT-S (CUDA PointROPE)</td>
+      <td>12.7M</td>
+      <td>72ms</td>
+      <td>2.3G</td>
+      <td>21ms</td>
+      <td>2.0G</td>
+    </tr>
+   </tbody>
+  </table>
+
+  </details>
 
 - Additional requirements. The requirements below are optional, and only required for evaluator and PointGroup instance segmentation. 
   * For evaluator:
@@ -159,10 +213,10 @@ Thanks to these great repositories: [Pointcept](https://github.com/Pointcept/Poi
 
 If you find this project useful, please cite:
 ```
-@article{yuelitept2025,
+@inproceedings{yuelitept2026,
     title={{LitePT: Lighter Yet Stronger Point Transformer}},
     author={Yue, Yuanwen and Robert, Damien and Wang, Jianyuan and Hong, Sunghwan and Wegner, Jan Dirk and Rupprecht, Christian and Schindler, Konrad},
-    journal={arXiv preprint arXiv:2512.13689},
-    year={2025}
+    booktitle={IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    year={2026}
 }
 ```

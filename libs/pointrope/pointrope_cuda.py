@@ -1,10 +1,7 @@
 
 import torch
 
-try:
-    import pointrope as _kernels # run `python setup.py install`
-except ModuleNotFoundError:
-    from . import pointrope as _kernels # run `python setup.py build_ext --inplace`
+import pointrope as _kernels # run `python setup.py install`
 
 
 class PointROPE_func(torch.autograd.Function):
