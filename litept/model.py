@@ -337,7 +337,7 @@ class PointROPEAttention(PointModule):
         self.num_heads = num_heads
         self.scale = qk_scale or (channels // num_heads) ** -0.5
         self.order_index = order_index
-
+        self.enable_flash = False # FlashAtt not downloadble for Windows
         self.patch_size = patch_size
         self.attn_drop = attn_drop
 
@@ -350,12 +350,18 @@ class PointROPEAttention(PointModule):
         self.rope = PointROPE(freq=rope_freq)
 
     def forward(self, point):
+        K = self.patch_size
+        if not self.enable_flash:
+            K = min(
+                offset2bincount(point.offset).min(
+                ).tolist(), K
+            )
 
         H = self.num_heads
-        K = self.patch_size
         C = self.channels
 
-        pad, unpad, cu_seqlens = point.get_padding_and_inverse(self.patch_size)
+        pad, unpad, cu_seqlens = point.get_padding_and_inverse(K)
+
 
         order = point.serialized_order[self.order_index][pad]
         inverse = unpad[point.serialized_inverse[self.order_index]]
@@ -367,7 +373,7 @@ class PointROPEAttention(PointModule):
         pos = point.grid_coord[order] # [N, 3]
         pos = pos.reshape(-1, 3).unsqueeze(0)
 
-        q, k, v = qkv.half().chunk(3, dim=-1)
+        q, k, v = qkv.half().chunk(3, dim=-1) # 3* N,C
         q = q.reshape(-1, H, C // H).transpose(0,1)[None] # [1, H, N, head_dim] 
         k = k.reshape(-1, H, C // H).transpose(0,1)[None] # [1, H, N, head_dim] 
 
@@ -390,11 +396,12 @@ class PointROPEAttention(PointModule):
         #     softmax_scale=self.scale,
         # ).reshape(-1, C)
 
+        # NOTE: Added myself not sure if it works
         feat = attention(q=q.squeeze(0).transpose(0,1),
                   k=k.squeeze(0).transpose(0,1),
                   v=v.reshape(-1, H, C // H),
                   dropout_p=self.attn_drop if self.training else 0,
-                  )
+                  ).transpose(1, 2).reshape(-1, C)
 
         feat = feat.to(qkv.dtype)
         feat = feat[inverse]
