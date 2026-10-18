@@ -5,19 +5,7 @@ from .hilbert import encode as hilbert_encode_
 from .hilbert import decode as hilbert_decode_
 
 import numpy as np
-from colorhash import ColorHash
 
-
-def int_to_plotly_rgb(x):
-    """Convert 1D torch.Tensor of int into plotly-friendly RGB format.
-    This operation is deterministic on the int values.
-    """
-    assert isinstance(x, torch.Tensor)
-    assert x.dim() == 1
-    assert not x.is_floating_point()
-    x = x.cpu().long().numpy()
-    palette = np.array([ColorHash(i).rgb for i in range(x.max() + 1)])
-    return palette[x]
 
 @torch.inference_mode()
 def encode(grid_coord, batch=None, depth=16, order="z"):
